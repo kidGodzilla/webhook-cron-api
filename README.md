@@ -2,7 +2,7 @@
 
 ## Installation
 
-Download the git repo and run `npm i -s` to install
+Download the git repo and run `npm i` to install
 
 ## Running
 
