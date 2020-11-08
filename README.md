@@ -15,6 +15,10 @@ You can start the app with:
 ### Authorization
 
 Each request requires an `auth` parameter (GET or POST), which is set as an env variable (`process.env.AUTHKEY`). The default is `xy0cWP` for testing (PLEASE OVERRIDE THIS WITH AN ENV VARIABLE).
+
+### Debugging
+
+You can set `process.env.DEBUG` (your DEBUG env variable) to `true` to enable logging of everything the app does (including job execution).
  
 ### Creating a new job
 
