@@ -109,11 +109,11 @@ if (cluster.isMaster) {
     function doRequest (key) {
         let { url } = crontab[key];
 
-        console.log(`Request ${ key } for ${ url }`);
+        if (debug) console.log(`Executing Request ${ key } for ${ url }`);
 
         request.get(url).then(() => {
             crontab[key].executed = + new Date();
-            console.log(`Fetched URL: ${ url }`);
+            if (debug) console.log(`Fetched URL: ${ url }`);
         });
     }
 
@@ -121,9 +121,11 @@ if (cluster.isMaster) {
         for (let key in crontab) {
             if (running[key]) continue;
 
-            let { cron } = crontab[key];
+            let { cron, url } = crontab[key];
 
             running[key] = schedule.scheduleJob(cron, function () { doRequest(key) });
+
+            if (debug) console.log(`Job started: ${ key } ${ cron } ${ url }`);
         }
     }
 
@@ -145,6 +147,8 @@ if (cluster.isMaster) {
             executed: 0
         }
 
+        if (debug) console.log(`Job created: ${ key } ${ cron } ${ url }`);
+
         running[key] = schedule.scheduleJob(cron, function () { doRequest(key) });
 
         res.send(key);
@@ -161,8 +165,19 @@ if (cluster.isMaster) {
         delete crontab[key];
         delete running[key];
 
+        if (debug) console.log(`Job deleted: ${ key }`);
+
         res.send('Job deleted');
     });
+
+    app.get('/job/:key', (req, res) => {
+        let { key } = req.params;
+
+        let out = out[key] || { exists: false };
+        if (running[key]) out.running = true;
+
+        return res.json(out);
+    })
 
     app.get('/jobs', authorized, (req, res) => {
         let out = JSON.parse(JSON.stringify(crontab));
