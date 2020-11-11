@@ -30,6 +30,6 @@
     "os": "^0.1.1",
     "simple-logger-api-monitor": "^0.7.15",
     "superagent": "^6.1.0",
-    "sync-via-ftp": "^0.2.15"
+    "sync-via-ftp": "^0.2.17"
   }
 }
